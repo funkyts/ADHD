@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHD 경제적 자립 유형 진단</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #1a202c;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .intro-section {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+        }
+
+        .intro-section h2 {
+            font-size: 1.4rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .intro-section p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #4a5568;
+        }
+
+        .test-section {
+            display: none;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .question-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #4a5568;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option label {
+            display: block;
+            padding: 16px 12px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .option input[type="radio"]:checked + label {
+            background: #2d3748;
+            border-color: #2d3748;
+            color: white;
+        }
+
+        .option label:hover {
+            border-color: #a0aec0;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 6px;
+            border-radius: 3px;
+            margin: 32px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4a5568;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: #2d3748;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 32px auto 0;
+        }
+
+        .btn:hover {
+            background: #1a202c;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+        }
+
+        .result-type {
+            display: inline-block;
+            background: #2d3748;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 24px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .result-description {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .result-description h3 {
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .chart-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .chart-canvas {
+            flex-shrink: 0;
+        }
+
+        .chart-legend {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 12px;
+        }
+
+        .legend-text {
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .guide-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .guide-section h4 {
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .guide-section ul {
+            padding-left: 20px;
+        }
+
+        .guide-section li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+
+        .restart-btn {
+            background: #718096;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            background: #4a5568;
+        }
+
+        .book-info-top {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+
+        .book-info-top p {
+            color: #718096;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .book-btn {
+            background: #2d3748;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .book-btn:hover {
+            background: #1a202c;
+        }
+
+        .book-btn-floating {
+            background: #2d3748;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .book-btn-floating:hover {
+            background: #1a202c;
+        }
+
+        .book-btn-floating.show {
+            display: block;
+        }
+
+        /* 새로운 플로팅 버튼 스타일 */
+        .ebook-btn-floating {
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+            display: none;
+            white-space: nowrap;
+        }
+
+        .ebook-btn-floating:hover {
+            background: #2c5aa0;
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(43, 108, 176, 0.4);
+        }
+
+        .ebook-btn-floating.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .chart-wrapper {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .ebook-btn-floating {
+                bottom: 15px;
+                left: 15px;
+                right: 15px;
+                transform: none;
+                font-size: 0.85rem;
+            }
+
+            .ebook-btn-floating:hover {
+                transform: translateY(-2px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 시작 화면 -->
+        <div id="intro" class="intro-section">
+            <div class="header">
+                <h1>ADHD 경제적 자립 유형 진단</h1>
+                <p>당신의 ADHD 특성을 파악하고, 경제적 자립을 위한 맞춤 가이드를 받아보세요</p>
+            </div>
+            
+            <h2>🎯 이 진단의 목적</h2>
+            <p>• 경제적 자립에 영향을 미치는 ADHD 증상 패턴을 파악합니다</p>
+            <p>• 당신의 고유한 특성에 맞는 맞춤형 가이드를 제공합니다</p>
+            <p>• 어려움을 강점으로 전환하는 구체적인 방법을 안내합니다</p>
+            
+            <h2 style="margin-top: 25px;">📋 진단 방법</h2>
+            <p>• 총 10개의 질문에 솔직하게 답해주세요</p>
+            <p>• 각 질문은 5점 척도로 평가됩니다</p>
+            <p>• 완료 후 미룬이형, 지름이형, 눈치나형, 뇌섹이형 중 당신의 유형을 확인할 수 있습니다</p>
+            
+            <button class="btn" onclick="startTest()">진단 시작하기</button>
+        </div>
+        
+        <!-- 테스트 화면 -->
+        <div id="test" class="test-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">1 / 10</div>
+            
+            <div id="questionsContainer"></div>
+            
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>다음 질문</button>
+            <button class="btn" id="submitBtn" onclick="calculateResult()" style="display: none;">결과 확인하기</button>
+        </div>
+        
+        <!-- 결과 화면 -->
+        <div id="result" class="result-section">
+            <div class="book-info-top">
+                <p>이 진단은 아래의 책을 기반으로 제작되었습니다.</p>
+                <button class="book-btn" onclick="openBook()">📚 &lt;다른 인생이라고 틀린 인생은 아니다&gt; 책보기</button>
+            </div>
+            
+            <div class="result-type" id="resultType"></div>
+            <div class="result-description" id="resultDescription"></div>
+            
+            <!-- 차트 섹션 추가 -->
+            <div class="chart-container">
+                <h3>📊 유형별 점수 분포</h3>
+                <div class="chart-wrapper">
+                    <canvas id="scoreChart" class="chart-canvas" width="200" height="200"></canvas>
+                    <div class="chart-legend" id="chartLegend"></div>
+                </div>
+            </div>
+            
+            <div id="guideContainer"></div>
+            
+            <button class="restart-btn btn" onclick="restartTest()">다시 진단하기</button>
+        </div>
+    </div>
+
+    <!-- 플로팅 책 버튼 -->
+    <button class="book-btn-floating" id="floatingBookBtn" onclick="openBook()">📚 책보기</button>
+
+    <!-- 새로운 플로팅 전자책 버튼 -->
+    <button class="ebook-btn-floating" id="floatingEbookBtn" onclick="openEbook()">📖 전자책 배포버전 선착순 받기</button>
+
+    <script>
+        // 질문 데이터
+        const questions = [
+            {
+                id: 1,
+                text: "물건(지갑, 열쇠, 핸드폰 등)을 자주 잃어버리거나 어디에 두었는지 기억하기 어렵나요?",
+                types: ['A']
+            },
+            {
+                id: 2,
+                text: "해야 할 일을 시작하거나 일단 시작한 일을 끝마치는 데 어려움을 자주 겪나요?",
+                types: ['A', 'B']
+            },
+            {
+                id: 3,
+                text: "약속 시간이나 마감 기한을 자주 놓치거나, 일을 마감 직전까지 미루는 경향이 있나요?",
+                types: ['B']
+            },
+            {
+                id: 4,
+                text: "감정 기복이 심하거나, 순간적인 감정에 휩쓸려 계획에 없던 행동이나 충동적인 결정을 하는 경우가 많나요?",
+                types: ['B', 'C']
+            },
+            {
+                id: 5,
+                text: "다른 사람의 사소한 비판이나 부정적인 반응에 매우 예민하게 반응하고 쉽게 좌절감을 느끼나요?",
+                types: ['C']
+            },
+            {
+                id: 6,
+                text: "대인 관계에서 오는 에너지 소모나 불안감 때문에 새로운 사람 만나는 것을 피하거나 관계를 최소화하려는 경향이 있나요?",
+                types: ['C']
+            },
+            {
+                id: 7,
+                text: "흥미롭지 않거나 반복적인 작업에는 쉽게 집중하기 어렵고, 다른 생각이나 주변 자극에 의해 쉽게 산만해지나요?",
+                types: ['A', 'B']
+            },
+            {
+                id: 8,
+                text: "높은 잠재력이나 좋은 아이디어가 있다고 생각하지만, 실제 꾸준한 성과로 이어지지 않아 자책하거나 지치는 경우가 많나요?",
+                types: ['C', 'D']
+            },
+            {
+                id: 9,
+                text: "불필요하거나 통제하기 어려운 걱정을 끊임없이 하거나, 머릿속 생각이 너무 많아 복잡하게 느껴지나요?",
+                types: ['A', 'C']
+            },
+            {
+                id: 10,
+                text: "특정 관심사나 작업에는 시간 가는 줄 모르고 깊이 몰입하지만, 그 외의 일에는 전혀 동기 부여가 되지 않아 시작조차 어렵나요?",
+                types: ['A', 'B']
+            }
+        ];
+
+        // 유형별 설명
+        const typeDescriptions = {
+            'A': {
+                name: '미룬이형',
+                subtitle: '계획만 세우다가 시간 다 감, 미루고 시간 감각이 떨어짐',
+                description: '주로 실행 기능 어려움, 정리 및 계획 수립에 어려움을 겪는 유형입니다. 일상적인 업무 처리나 시간 관리에 어려움을 느껴 생산성에 제약을 받을 수 있습니다.',
+                guides: [
+                    '작은 단위로 시작하세요 - 하루에 반드시 완료할 가장 중요한 일 단 한 가지만 정해서 실행합니다',
+                    '외부 환경을 설계하세요 - 중요한 물건은 항상 같은 곳에 두고, 알림 기능을 적극 활용합니다',
+                    '루틴을 간결하게 만드세요 - 복잡한 루틴 대신 최소한의 필수 요소만 포함하는 간단한 루틴부터 시작합니다',
+                    '생각을 외부화하세요 - 머릿속이 복잡할 때 글로 적어두면 생각을 정리하는 데 도움이 됩니다',
+                    '협업을 활용하세요 - 실행력이 강한 파트너와 협력하여 약점을 보완받을 수 있습니다'
+                ],
+                color: '#3182ce'
+            },
+            'B': {
+                name: '지름이형',
+                subtitle: '지금이 아니면 안 될 것 같다 생각하고, 지르고 나서 후회하는 것을 반복',
+                description: '시간 인식 왜곡, 미루는 습관, 충동적인 결정 등으로 인해 일정 관리가 어렵고 재정적 충동성이 나타날 수 있는 유형입니다.',
+                guides: [
+                    '시간 관리를 외부 도구에 맡기세요 - 스마트폰 알림, 캘린더 앱을 적극 활용하여 일정을 관리합니다',
+                    '미루는 습관을 환경 설계로 개선하세요 - 큰 작업을 작은 단위로 나누고 각 단계마다 작은 보상을 설정합니다',
+                    '감정을 인식하고 다루는 연습을 하세요 - 감정일기를 쓰며 자신의 감정을 인식하고 객관화하는 연습을 합니다',
+                    '감정과 사실을 분리하는 기술을 익히세요 - 순간의 감정이 사실이 아님을 인지하고 객관적 판단을 합니다',
+                    '유연한 루틴을 만드세요 - 엄격한 시간표보다는 탄력적인 루틴을 설계하고 작은 성공에도 보상을 제공합니다'
+                ],
+                color: '#e53e3e'
+            },
+            'C': {
+                name: '눈치나형',
+                subtitle: '사람들 말 한마디와 눈빛 하나에 마음이 흔들거리고 결정이 바뀜',
+                description: '감정 기복이 심하고 타인의 시선/비판에 민감하며 대인 관계에서 에너지 소모가 큰 유형입니다. 협업이나 고객 관계 구축에 영향을 줄 수 있습니다.',
+                guides: [
+                    '자신에게 친절하게 대하세요 - 실패나 어려움에도 자신을 비난하는 대신 이해하고 격려하는 연습을 합니다',
+                    '감정을 건강하게 표현하고 해소하세요 - 감정일기를 통해 자신의 감정을 명확히 인식하고 기록합니다',
+                    '안전한 관계와 커뮤니티를 찾으세요 - 자신의 다름을 이해하고 지지해주는 사람들과 함께하는 공간을 찾습니다',
+                    '감정과 사실을 분리하는 연습을 하세요 - 특히 대인관계에서 감정적 해석이 아닌 객관적 사실에 집중합니다',
+                    '진정성 있는 브랜딩을 시도하세요 - 완벽한 모습보다는 솔직한 모습을 드러낼 때 더 깊은 신뢰를 쌓을 수 있습니다'
+                ],
+                color: '#38a169'
+            },
+            'D': {
+                name: '뇌섹이형',
+                subtitle: '두뇌가 뛰어난 반면에 몸이 움직이지 않아서 자책하는 자책부자',
+                description: '높은 지능이나 창의성 등 잠재력이 크지만, ADHD 증상으로 인해 꾸준한 성과를 내거나 유지하는 데 어려움을 겪으며 자책이 깊어지는 유형입니다.',
+                guides: [
+                    '자신이 망가진 것이 아니라 다르게 작동하는 것임을 받아들이세요 - 겪는 어려움은 의지력 문제가 아닌 뇌의 구조적 특성입니다',
+                    '노력만으로는 부족함을 인정하고 전략을 바꿔보세요 - 더 열심히가 아닌 자신에게 맞는 다른 접근법을 찾아야 합니다',
+                    '자신의 강점에 집중하고 활용하세요 - 발산적 사고, 창의력, 직관적 통찰력 등 ADHD 특유의 강점을 파악하고 활용합니다',
+                    '시스템과 협업을 통해 약점을 보완하세요 - 혼자 모든 것을 하려 하지 말고 자동화, 위임, 협업을 통해 약점을 보완합니다',
+                    '작지만 꾸준한 성공 경험을 의도적으로 만드세요 - 작은 목표 달성을 통해 자존감을 회복하고 긍정적 자기 인식을 쌓습니다'
+                ],
+                color: '#805ad5'
+            }
+        };
+
+        // 공통 가이드
+        const commonGuides = [
+            '자기 돌봄을 최우선으로 하세요 - 충분한 수면, 건강한 식사, 운동은 ADHD 증상 관리에 필수적입니다',
+            '경계 설정을 명확히 하세요 - 에너지 뱀파이어를 피하고, 아니오라고 말하는 연습을 합니다',
+            '느리지만 오래가는 방식을 추구하세요 - 빠른 성공보다는 꾸준함과 신뢰 구축에 초점을 맞춥니다',
+            '혼자가 아님을 기억하세요 - 비슷한 어려움을 겪는 사람들과의 교류를 통해 상호 지지를 얻습니다',
+            '실패를 과정의 일부로 받아들이고 회복 루틴을 만드세요 - 다시 시작할 수 있는 복구 루틴을 미리 계획해 둡니다',
+            '자신에게 맞는 방식을 실험하고 찾아나가세요 - 이 가이드는 정답이 아니라 도구입니다'
+        ];
+
+        let currentQuestion = 0;
+        let answers = {};
+        let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+        function startTest() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('test').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const container = document.getElementById('questionsContainer');
+            const question = questions[currentQuestion];
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">${currentQuestion + 1}</div>
+                    <div class="question-text">${question.text}</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q${question.id}_1" name="q${question.id}" value="1">
+                            <label for="q${question.id}_1">전혀<br>그렇지 않다</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.id}_2" name="q${question.id}" value="2">
+                            <label for="q${question.id}_2">그렇지<br>않다</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.id}_3" name="q${question.id}" value="3">
+                            <label for="q${question.id}_3">보통<br>이다</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.id}_4" name="q${question.id}" value="4">
+                            <label for="q${question.id}_4">그렇다</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.id}_5" name="q${question.id}" value="5">
+                            <label for="q${question.id}_5">매우<br>그렇다</label>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 이전 답변이 있다면 복원
+            if (answers[question.id]) {
+                document.getElementById(`q${question.id}_${answers[question.id]}`).checked = true;
+                document.getElementById('nextBtn').disabled = false;
+            } else {
+                document.getElementById('nextBtn').disabled = true;
+            }
+
+            // 라디오 버튼 이벤트 리스너
+            const radios = document.querySelectorAll(`input[name="q${question.id}"]`);
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    answers[question.id] = parseInt(radio.value);
+                    document.getElementById('nextBtn').disabled = false;
+                });
+            });
+
+            updateProgress();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentQuestion + 1} / ${questions.length}`;
+        }
+
+        function calculateResult() {
+            // 점수 계산 - 가중치 적용
+            scores = { A: 0, B: 0, C: 0, D: 0 };
+            
+            questions.forEach(question => {
+                const answer = answers[question.id];
+                if (answer >= 4) { // 4점 이상인 경우에만 해당 유형 점수 증가
+                    question.types.forEach(type => {
+                        // 각 유형별로 가중치를 다르게 적용하여 복합형 줄이기
+                        if (question.types.length === 1) {
+                            // 단일 유형 질문은 가중치 2배
+                            scores[type] += 2;
+                        } else {
+                            // 복합 유형 질문은 기본 점수
+                            scores[type] += 1;
+                        }
+                    });
+                }
+            });
+
+            // D형 특별 처리 - 더 까다로운 조건
+            if (answers[8] >= 5) { // 8번 문항이 5점(매우 그렇다)이고
+                const totalOtherScores = scores.A + scores.B + scores.C;
+                if (totalOtherScores >= 4) { // 다른 유형들의 점수가 충분히 높으면
+                    scores.D += 3; // D형 점수 추가 부여
+                }
+            }
+
+            // 가장 높은 점수의 유형 찾기 - 더 엄격한 기준
+            let maxScore = Math.max(...Object.values(scores));
+            let topTypes = [];
+            
+            Object.keys(scores).forEach(type => {
+                if (scores[type] === maxScore && maxScore > 0) {
+                    topTypes.push(type);
+                }
+            });
+
+            let resultType;
+            
+            // 복합형 조건을 더 까다롭게 설정
+            if (topTypes.length > 1) {
+                // 최고점이 3점 이상이고, 2위와의 차이가 1점 이하일 때만 복합형
+                const sortedScores = Object.values(scores).sort((a, b) => b - a);
+                const firstScore = sortedScores[0];
+                const secondScore = sortedScores[1];
+                
+                if (firstScore >= 3 && (firstScore - secondScore) <= 1) {
+                    // 복합형도 최대 2개까지만
+                    if (topTypes.length > 2) {
+                        // 점수가 같은 경우 특정 우선순위로 선택
+                        const priority = ['D', 'C', 'B', 'A'];
+                        topTypes = topTypes.sort((a, b) => {
+                            return priority.indexOf(a) - priority.indexOf(b);
+                        }).slice(0, 2);
+                    }
+                    resultType = topTypes.join('+');
+                } else {
+                    // 차이가 크면 단일형으로 판정
+                    resultType = topTypes[0];
+                }
+            } else {
+                resultType = topTypes[0] || 'A'; // 기본값
+            }
+
+            showResult(resultType);
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('scoreChart');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 80;
+
+            // 캔버스 클리어
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+            
+            if (totalScore === 0) {
+                // 점수가 없을 때 기본 원 그리기
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fill();
+                return;
+            }
+
+            let startAngle = -Math.PI / 2; // 12시 방향부터 시작
+
+            const typeOrder = ['A', 'B', 'C', 'D'];
+            const legendContainer = document.getElementById('chartLegend');
+            legendContainer.innerHTML = '';
+
+            typeOrder.forEach(type => {
+                const score = scores[type];
+                if (score > 0) {
+                    const sliceAngle = (score / totalScore) * 2 * Math.PI;
+                    const color = typeDescriptions[type].color;
+
+                    // 파이 조각 그리기
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                    ctx.closePath();
+                    ctx.fillStyle = color;
+                    ctx.fill();
+
+                    // 경계선 그리기
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                    ctx.closePath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // 범례 항목 생성
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `
+                        <div class="legend-color" style="background-color: ${color}"></div>
+                        <div class="legend-text">${typeDescriptions[type].name}: ${score}점 (${Math.round(score/totalScore*100)}%)</div>
+                    `;
+                    legendContainer.appendChild(legendItem);
+
+                    startAngle += sliceAngle;
+                }
+            });
+        }
+
+        function showResult(resultType) {
+            document.getElementById('test').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            // 플로팅 버튼들 표시
+            document.getElementById('floatingBookBtn').classList.add('show');
+            document.getElementById('floatingEbookBtn').classList.add('show');
+
+            // 복합 유형 처리
+            const types = resultType.split('+');
+            const primaryType = types[0];
+            
+            document.getElementById('resultType').textContent = 
+                types.length > 1 ? `${resultType} 복합형` : typeDescriptions[primaryType].name;
+
+            // 결과 설명
+            let description = '';
+            if (types.length > 1) {
+                description = `당신은 여러 유형의 특성을 복합적으로 가지고 있습니다. 주요 특성들을 함께 살펴보세요.`;
+                types.forEach(type => {
+                    description += `<br><br><strong>${typeDescriptions[type].name}:</strong><br><span style="color: #718096; font-size: 0.9em;">${typeDescriptions[type].subtitle}</span><br>${typeDescriptions[type].description}`;
+                });
+            } else {
+                description = `<div style="margin-bottom: 15px;"><span style="color: #4a5568; font-weight: 600; font-size: 1.1em;">${typeDescriptions[primaryType].subtitle}</span></div>${typeDescriptions[primaryType].description}`;
+            }
+
+            document.getElementById('resultDescription').innerHTML = `
+                <h3>🎯 당신의 유형 특성</h3>
+                <p>${description}</p>
+            `;
+
+            // 차트 그리기
+            drawChart();
+
+            // 가이드 표시
+            let guideHtml = '';
+            
+            // 유형별 가이드
+            types.forEach(type => {
+                guideHtml += `
+                    <div class="guide-section">
+                        <h4>💡 ${typeDescriptions[type].name} 맞춤 가이드</h4>
+                        <ul>
+                            ${typeDescriptions[type].guides.map(guide => `<li>${guide}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+
+            // 공통 가이드
+            guideHtml += `
+                <div class="guide-section">
+                    <h4>🌟 모든 유형 공통 가이드</h4>
+                    <ul>
+                        ${commonGuides.map(guide => `<li>${guide}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('guideContainer').innerHTML = guideHtml;
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = {};
+            scores = { A: 0, B: 0, C: 0, D: 0 };
+            
+            // 플로팅 버튼들 숨기기
+            document.getElementById('floatingBookBtn').classList.remove('show');
+            document.getElementById('floatingEbookBtn').classList.remove('show');
+            
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('intro').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'none';
+        }
+
+        function openBook() {
+            window.open('https://abit.ly/aftertestadhd', '_blank');
+        }
+
+        function openEbook() {
+            window.open('https://open.kakao.com/o/gT1ge4Ah', '_blank');
+        }
+    </script>
+</body>
+</html>
