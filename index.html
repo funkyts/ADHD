@@ -1,3 +1,13 @@
+네, **알려주신 픽셀 ID (`492376718677207`)를 정확히 적용한 전체 코드**입니다.
+
+이 코드를 복사해서 기존 파일의 내용을 전부 지우고, **이 내용으로 통째로 덮어쓰시면 됩니다.**
+
+### 수정된 내용
+
+1. **상단(`<head>`)**: 페이스북 픽셀 기본 코드를 심어두었습니다. (페이지 방문 추적)
+2. **하단(`calculateResult` 함수)**: 결과 확인 버튼을 누르면 `CompleteRegistration`(등록 완료) 신호를 페이스북으로 보내도록 설정했습니다.
+
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,8 +17,25 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "t2z6s18eu2");
-</script>
+    </script>
     
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    
+    // 사용자의 픽셀 ID 적용됨
+    fbq('init', '492376718677207'); 
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=492376718677207&ev=PageView&noscript=1"
+    /></noscript>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADHD 경제적 자립 유형 진단</title>
@@ -449,7 +476,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- 시작 화면 -->
         <div id="intro" class="intro-section">
             <div class="header">
                 <h1>ADHD 경제적 자립 유형 진단</h1>
@@ -469,7 +495,6 @@
             <button class="btn" onclick="startTest()">진단 시작하기</button>
         </div>
         
-        <!-- 테스트 화면 -->
         <div id="test" class="test-section">
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
@@ -482,7 +507,6 @@
             <button class="btn" id="submitBtn" onclick="calculateResult()" style="display: none;">결과 확인하기</button>
         </div>
         
-        <!-- 결과 화면 -->
         <div id="result" class="result-section">
             <div class="book-info-top">
                 <p>이 진단은 아래의 책을 기반으로 제작되었습니다.</p>
@@ -492,7 +516,6 @@
             <div class="result-type" id="resultType"></div>
             <div class="result-description" id="resultDescription"></div>
             
-            <!-- 차트 섹션 추가 -->
             <div class="chart-container">
                 <h3>📊 유형별 점수 분포</h3>
                 <div class="chart-wrapper">
@@ -507,10 +530,8 @@
         </div>
     </div>
 
-    <!-- 플로팅 책 버튼 -->
     <button class="book-btn-floating" id="floatingBookBtn" onclick="openBook()">📚 책보기</button>
 
-    <!-- 새로운 플로팅 전자책 버튼 -->
     <button class="ebook-btn-floating" id="floatingEbookBtn" onclick="openEbook()">📖 전자책 배포버전 선착순 받기</button>
 
     <script>
@@ -714,6 +735,9 @@
         }
 
         function calculateResult() {
+            // [중요] 결과 확인 버튼을 누르면 페이스북으로 신호를 쏩니다
+            if(typeof fbq === 'function') fbq('track', 'CompleteRegistration');
+
             // 점수 계산 - 가중치 적용
             scores = { A: 0, B: 0, C: 0, D: 0 };
             
@@ -932,3 +956,5 @@
     </script>
 </body>
 </html>
+
+```
